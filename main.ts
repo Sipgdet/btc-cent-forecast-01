@@ -18,8 +18,8 @@
 //    to persistence. Output is rounded to 5 decimals and clamped to the
 //    scorer's (0, 10,000,000) range.
 //
-// Tuning (84 sliced 4h-ahead points from the practice recording + the 5
-// official practice cases with known actuals): the first design (trend
+// Tuning (84 sliced 4h-ahead points from the practice recording, plus the
+// 5 official practice cases with known actuals): the first design (trend
 // shrink 0.20, anchor pull 0.10, 72h-median anchor) lost 8.3% to persistence
 // on the official cases, so the shrink went to 0.25, the pull to 0.05 and
 // the anchor to the 24h median. Tuned: +1.9% vs persistence on the slices
@@ -61,7 +61,7 @@ function forecast(m: Market): number {
   for (let i = 1; i < lx.length; i++) r.push(lx[i]! - lx[i - 1]!);
   if (r.length === 0) return grid(last);
 
-  // Median of the 30 latest overlapping h-minute log returns.
+  // Median of the 30 latest overlapping h-minute log returns (h = 60/240/720).
   const horizon = (h: number): number => {
     const vs: number[] = [];
     for (let j = lx.length - 1; j >= Math.max(h, lx.length - 30); j--) {
